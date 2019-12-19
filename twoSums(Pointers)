@@ -1,0 +1,25 @@
+#https://leetcode.com/problems/two-sum/submissions/
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+
+        if (nums == None or len(nums) <= 1):
+            return []
+        #sort so it's faster (O(nlog(n)) compared to O(n))
+        sortedNums = nums.sort()
+        
+        leftPointer = 0
+        rightPointer = len(nums) - 1
+        
+        while (leftPointer <= rightPointer):
+            currSum = sortedNums[leftPointer] + sortedNums[rightPointer]
+            if (currSum == target):
+                #find the index in the unsorted array and return the index
+                return [nums.index(sortedNums[leftPointer], nums.index(sortedNums[rightPointer]))]
+            if (currSum > target):
+                rightPointer -= 1
+            else:
+                leftPointer += 1
+        
+        return []
+        
