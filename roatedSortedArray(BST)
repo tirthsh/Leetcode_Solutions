@@ -1,0 +1,39 @@
+class Solution:
+    def search(self, nums: List[int], target: int) -> bool:
+        if (nums == None or len(nums) == 0):
+            return False
+
+        leftPointer = 0
+        rightPointer = len(nums) - 1
+        
+        #find the minimum in the current rotated array
+        while (leftPointer < rightPointer):
+            midPoint = leftPointer + (rightPointer - leftPointer) // 2
+            #odd case, find the point where the right side is lower than the midpoint
+            if (nums[midPoint] > nums[rightPointer]):
+                leftPointer = midPoint + 1
+            else:
+                rightPointer = midPoint
+        
+        start = leftPointer
+        leftPointer = 0
+        rightPointer = len(nums) - 1
+        
+        #find whether target is in the right or left side of the minimum found above
+        if (target >= nums[start] and target <= nums[rightPointer]):
+            leftPointer = start
+        else:
+            rightPointer = start
+            
+        #run BST again to find target
+        while (leftPointer <= rightPointer):
+            midPoint = leftPointer + (rightPointer - leftPointer) // 2
+            if (nums[midPoint] == target):
+                return True
+            elif (nums[midPoint] < target):
+                leftPointer = midPoint + 1
+            else:
+                rightPointer = midPoint - 1
+        
+        return False
+        
