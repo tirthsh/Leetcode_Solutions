@@ -1,0 +1,21 @@
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        
+        if (nums == None or len(nums) == 0):
+            return 0
+    
+        leftPointer = 0
+        #temp max
+        result = float('inf')
+        sum = 0
+        
+        for i in range(0, len(nums)):
+            sum += nums[i]
+            #iterate until s is reached
+            while (sum >= s):
+                result = min(result, i + 1 - leftPointer)
+                sum -= nums[leftPointer]
+                leftPointer += 1
+        
+        return result if result != float('inf') else 0
+        
