@@ -3,7 +3,7 @@
 class Solution:
     def search(self, nums: List[int], target: int) -> bool:
         if (nums == None or len(nums) == 0):
-            return False
+            return -1
 
         leftPointer = 0
         rightPointer = len(nums) - 1
@@ -31,11 +31,11 @@ class Solution:
         while (leftPointer <= rightPointer):
             midPoint = leftPointer + (rightPointer - leftPointer) // 2
             if (nums[midPoint] == target):
-                return True
+                return midPoint
             elif (nums[midPoint] < target):
                 leftPointer = midPoint + 1
             else:
                 rightPointer = midPoint - 1
         
-        return False
+        return -1
         
