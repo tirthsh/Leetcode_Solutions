@@ -1,0 +1,31 @@
+#https://leetcode.com/problems/range-sum-of-bst/
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def rangeSumBST(self, root: TreeNode, L: int, R: int) -> int:
+        if (root == None):
+            return 0
+        
+        sum = 0
+        stack = []
+        stack.append(root)
+        
+        while (len(stack) != 0):
+            elem = stack.pop()
+            if (elem.val >= L and elem.val <= R):
+                sum += elem.val
+            
+            if (elem.left != None):
+                stack.append(elem.left)
+            if (elem.right != None):
+                stack.append(elem.right)
+        
+        return sum
+        
+        
