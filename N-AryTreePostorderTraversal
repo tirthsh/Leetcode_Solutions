@@ -1,0 +1,27 @@
+#https://leetcode.com/problems/n-ary-tree-postorder-traversal/
+
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+"""
+class Solution:
+    def postorder(self, root: 'Node') -> List[int]:
+        stack = []
+        output = []
+        
+        if (root == None):
+            return []
+        
+        stack.append(root)
+        
+        while (len(stack) != 0):
+            elem = stack.pop()
+            output.insert(0, elem)
+            for child in elem.children:
+                stack.append(child)
+        
+        return output
+            
