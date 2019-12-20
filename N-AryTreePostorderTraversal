@@ -19,7 +19,7 @@ class Solution:
         
         while (len(stack) != 0):
             elem = stack.pop()
-            output.insert(0, elem)
+            output.insert(0, elem.val)
             for child in elem.children:
                 stack.append(child)
         
