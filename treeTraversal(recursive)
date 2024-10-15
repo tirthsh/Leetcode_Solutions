@@ -1,0 +1,71 @@
+'''
+Let's focus on result.append(root.val)
+
+For Inorder, we do something between left and right.
+For Preorder, we do something before left and right.
+For Postorder, we do something after left and right.
+
+'''
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+        
+result = []
+
+#preorder - append root first
+def preorder(root):
+    if not root:
+        return []
+    
+    result.append(root.val)
+    preorder(root.left)
+    preorder(root.right)
+    
+    return result
+
+
+#inorder - append root in between
+def inorder(root):
+    if not root:
+        return []
+        
+    inorder(root.left)
+    result.append(root.val)
+    inorder(root.right)
+    
+    return result
+
+#postorder - append root at end
+def postorder(root):
+    if not root:
+        return []
+    
+    postorder(root.left)
+    postorder(root.right)
+    result.append(root.val)
+    
+    return result
+
+t9 = TreeNode(9)
+t8 = TreeNode(8, t9)
+t3 = TreeNode(3, None, t8)
+
+t4 = TreeNode(4)
+t6 = TreeNode(6)
+t7 = TreeNode(7)
+t5 = TreeNode(5, t6, t7)
+t2 = TreeNode(2, t4, t5)
+
+t1 = TreeNode(1, t2, t3)
+
+r1 = preorder(t1)
+print(r1)
+
+r2 = inorder(t1)
+print(r2)
+
+r3 = postorder(t1)
+print(r3)
