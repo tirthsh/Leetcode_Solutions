@@ -1,3 +1,5 @@
+#NOTE: List must be sorted
+
 def binarySearch(nums: list, target: int):
     leftIndex = 0
     rightIndex = len(nums) - 1
