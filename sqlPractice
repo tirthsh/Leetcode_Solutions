@@ -1,0 +1,206 @@
+/* 1. Retrieve the Nth Highest Salary
+Question: Write a query to find the 2nd highest salary from the employees table.
+Table Structure: employees(id, name, salary)
+*/
+
+/* Method 1: Max
+Description: select maximum salary from the table where that salary is less than the maximum salary. 
+Note: Inner query / sub-query is ALWAYS evaluated first
+*/
+
+SELECT MAX(salary) AS second_highest_salary 
+FROM employees
+WHERE salary < (SELECT MAX(salary) FROM employees);
+
+/* Method 2: Limit
+Description: select the first row of the 2 rows from a table (that is ascending order) 
+where that table has 2 rows with descending order from highest to lowest salary
+*/ 
+SELECT salary AS second_highest_salary
+FROM (select salary from employees ORDER BY salary DESC limit 2) AS emp
+ORDER BY salary LIMIT 1; --by default it's ASC order
+
+-- Method 3: Top
+
+SELECT TOP 1 salary 
+FROM (SELECT TOP 2 salary FROM employees ORDER BY salary DESC) AS emp 
+ORDER BY salary ASC;
+
+/* 2. Find Duplicate Records
+Question: Write a query to find duplicate records based on the email column from the users table.
+Table Structure: users(id, name, email)
+*/
+
+-- Description: Whenver you hear the word - duplicate - use count!
+
+SELECT email
+FROM users
+GROUP BY email
+HAVING COUNT(email) > 1
+
+/*
+3. Find Employees Who Earn More Than Their Manager
+Question: Write a query to find all employees who earn more than their manager.
+Table Structure: employees(id, name, salary, manager_id)
+*/
+
+SELECT e.name AS employee_name, e.salary AS employee_salary, m.name AS manager_name, m.salary AS manager_salary
+FROM employees e
+JOIN employees m ON e.manager_id = m.id
+WHERE employee_salary > manager_id;
+
+/*
+4. Find Top-N Records
+Question: Write a query to retrieve the top 3 employees with the highest salaries.
+Table Structure: employees(id, name, salary)
+*/
+
+SELECT id, name
+FROM employees
+ORDER BY salary DESC 
+LIMIT 3;
+
+/*
+5. Find Employees in Multiple Departments
+Question: Write a query to find employees who are working in more than one department.
+Table Structure: employee_department(employee_id, department_id)
+*/
+
+SELECT employee_id, COUNT(department_id) AS department_count
+FROM employee_department
+GROUP BY employee_id
+HAVING COUNT(department_id) > 1
+
+/*
+6. Write a Query to Display Department-Wise Employee Count
+Question: Write a query to display the number of employees in each department.
+Table Structure: departments(id, name) and employees(id, name, department_id)
+*/
+
+SELECT d.name AS department_name, COUNT(e.id) AS employee_count
+FROM departments AS d
+LEFT JOIN employees AS e ON d.id = e.department_id
+GROUP by d.name;
+
+/*
+7. Find the Total Salary Expense for Each Department
+Question: Write a query to calculate the total salary paid to employees in each department.
+Table Structure: departments(id, name) and employees(id, name, salary, department_id)
+*/
+
+SELECT SUM(e.salary) AS total_salary, d.name AS department_name
+FROM employees AS e
+JOIN department AS d ON d.id = e.department_id
+GROUP BY d.name
+
+/*
+8. Update a Specific Record
+Question: Update the salary of all employees in the Marketing department by 10%.
+Table Structure: departments(id, name) and employees(id, name, salary, department_id)
+*/
+
+UPDATE employees
+SET salary = salary * 1.10
+WHERE department_id = (SELECT id from departments WHERE LOWER(name) = 'marketing');
+
+/*
+9. Delete Records Based on a Condition
+Question: Delete all employees who have not been assigned to any department.
+Table Structure: employees(id, name, salary, department_id)
+*/
+
+DELETE FROM employees
+WHERE department_id is NULL;
+
+/*
+10. Find Employees Hired in the Last 30 Days
+Question: Write a query to find all employees who were hired in the last 30 days.
+Table Structure: employees(id, name, hire_date)
+*/
+
+SELECT id, name
+FROM employees
+WHERE hire_date >= CURDATE() - INTERVAL 30 DAY;
+
+/*
+11. Write a Query to Get the Average Salary by Department
+Question: Write a query to find the average salary in each department.
+Table Structure: departments(id, name) and employees(id, name, salary, department_id)
+*/
+
+SELECT d.name AS department_name, AVG(e.salary) AS average_salary
+FROM departments as d
+JOIN employees as e ON d.id = e.department_id
+GROUP BY d.name;
+
+/*
+12. Find Employees Who Don't Belong to Any Department
+Question: Write a query to find all employees who are not assigned to any department.
+Table Structure: employees(id, name, salary, department_id)
+*/
+SELECT name
+FROM employees
+WHERE department_id is NULL;
+
+/*
+13. Retrieve the Last Record in a Table
+Question: Write a query to retrieve the last inserted record in the employees table.
+*/
+
+SELECT * 
+FROM employees
+ORDER BY id DESC
+LIMIT 1;
+
+/*
+14. Query to Get Employees with Salaries Between Two Values
+Question: Write a query to find employees whose salaries are between $50,000 and $100,000.
+Table Structure: employees(id, name, salary)
+*/
+
+SELECT name, salary
+FROM employees
+WHERE salary BETWEEN 50000 AND 100000;
+
+/*
+15. Find All Employees Whose Name Starts with a Specific Letter
+Question: Write a query to find all employees whose names start with 'A'.
+Table Structure: employees(id, name)
+*/
+
+SELECT id, name
+FROM employees
+WHERE name LIKE 'A%';
+
+/*
+16. Self-Join Example: Find Employees Who Have the Same Salary
+Question: Write a query to find pairs of employees who earn the same salary.
+Table Structure: employees(id, name, salary)
+*/
+
+SELECT e1.name AS employee1, e2.name AS employee2
+FROM employees AS e1
+JOIN employees AS e2 ON e1.salary = e2.salary AND e1.id != e2.id
+GROUP BY e1.salary
+
+/*
+17. Count Records with a Condition
+Question: Write a query to count how many employees are earning more than $60,000.
+Table Structure: employees(id, name, salary)
+*/
+
+SELECT COUNT(*)
+FROM employees
+WHERE salary > 60000
+
+/*
+18. Query for a Conditional Aggregate
+Question: Write a query to find the number of employees in each department who earn more than $70,000.
+Table Structure: departments(id, name) and employees(id, name, salary, department_id)
+*/
+
+SELECT COUNT(e.id) AS employee_count, d.name AS department_name
+FROM employees as e
+JOIN departments as d ON e.department_id = d.id
+WHERE e.salary > 70000
+GROUP BY e.id
